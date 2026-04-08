@@ -1,0 +1,354 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #050510;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#stars-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    animation: twinkle infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
+
+#intro-scene {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    transition: opacity 1s;
+}
+
+.pink-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #d81b60;
+    font-weight: bold;
+    text-shadow: 0 0 50px #e91e63;
+    white-space: nowrap;
+    opacity: 0;
+    animation: showAndHide 2.5s ease-in-out forwards;
+}
+
+@keyframes showAndHide {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+    70% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(2.5); }
+}
+
+/* --- ส่วนของการ์ดสมุด 3D --- */
+
+@keyframes cardEntrance {
+    from { opacity: 0; transform: scale(0.5) translateY(50px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+#card-scene {
+    position: absolute;
+    z-index: 20;
+    display: none;
+    perspective: 2000px; 
+    width: 300px;
+    height: 400px;
+    animation: cardEntrance 1.5s ease-out;
+}
+
+.book {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6)); /* เพิ่มเงาให้ดูเด่นจากพื้นหลัง Matrix */
+}
+
+.book-open {
+    transform: translateX(50%); 
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    border-radius: 0 10px 10px 0;
+    transform-origin: left center;
+    backface-visibility: hidden;
+    padding: 25px;
+    cursor: pointer;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+}
+
+/* 1. หน้าปก */
+.page-cover {
+    z-index: 10; 
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+    border: 1px solid #f48fb1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.page-cover h3 {
+    color: #d81b60;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* 2. หน้าซ้าย (หลังปก) */
+.page-left {
+    z-index: 9;
+    transform: rotateY(0deg); 
+    background-color: #f8f4e6; /* สีพื้นหลังกระดาษวินเทจ */
+    border-radius: 10px 0 0 10px;
+    border-right: 1px solid #ddd;
+    box-shadow: inset -10px 0 15px -10px rgba(0,0,0,0.15); /* สันสมุดด้านซ้าย */
+}
+/* 3. หน้าขวา (โผล่มาตอนกาง) */
+.page-right {
+    z-index: 1;
+    cursor: pointer;
+    background-color: #fafafa;
+    border-radius: 0 10px 10px 0;
+    box-shadow: inset 15px 0 20px -10px rgba(0,0,0,0.1); /* สันสมุดด้านขวา */
+    opacity: 0; 
+    pointer-events: none; 
+}
+
+/* --- สถานะตอนเปิด --- */
+.flipped.page-cover {
+    transform: rotateY(-180deg);
+    z-index: 8; 
+}
+
+.flipped.page-left {
+    transform: rotateY(-180deg);
+    z-index: 11;
+}
+
+.book-open .page-right {
+    opacity: 1; 
+    pointer-events: auto; 
+}
+
+/* --- ตกแต่งเนื้อหาด้านใน --- */
+.back-content {
+    transform: rotateY(180deg);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-box {
+    background-color: #fff0f5;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    width: 100%;
+    font-size: 0.85rem;
+    color: #d81b60;
+    line-height: 1.5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* มิติให้กล่องข้อความ */
+}
+
+.message-box span {
+    font-size: 0.75rem;
+    color: #555;
+    display: block;
+    margin-top: 8px;
+}
+
+/* การจัดวางหน้าขวา (รูปและข้อความอยู่กึ่งกลาง) */
+.right-content {
+    display: flex;
+    flex-direction: column; /* เรียงเป็นแนวตั้ง */
+    align-items: center; /* จัดกึ่งกลางแนวนอน */
+    justify-content: center; /* จัดกึ่งกลางแนวตั้ง */
+    height: 100%;
+    width: 100%;
+    gap: 15px; /* ระยะห่างระหว่างรูป */
+}
+
+.right-content img {
+    width: 80%; /* ปรับขนาดรูปให้พอดี */
+    height: 130px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* เพิ่มเงาให้รูป */
+}
+
+.right-content p {
+    color: #d81b60;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+}
+/* --- เพิ่ม Style ใหม่สำหรับกระดาษวินเทจ --- */
+.message-box.vintage-paper {
+    background-color: #fdfaf1;
+    background-image: 
+        url('https://www.transparenttextures.com/patterns/old-mathematics.png'), /* เพิ่มลายกระดาษ */
+        url('https://www.transparenttextures.com/patterns/paper-fibers.png'); /* เพิ่มTextureเส้นใย */
+    background-blend-mode: multiply;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e0d0b0; /* สีขอบกระดาษ */
+    text-align: center;
+    width: 100%;
+    font-size: 0.85rem;
+    color: #a07a4a; /* สีตัวอักษรวินเทจ */
+    line-height: 1.5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* มิติให้กล่องข้อความ */
+}
+
+.vintage-quote {
+    font-family: 'Dancing Script', cursive; /* ใช้ฟอนต์ลายมือ */
+    font-size: 1rem;
+    color: #8c6a3b;
+    margin-top: 15px;
+    font-style: italic;
+}
+/* =========================================
+   1. แก้ไขการจัดกึ่งกลางของเดิม (บังคับให้อยู่ตรงกลางเป๊ะๆ)
+   ========================================= */
+#card-scene {
+    top: 50%;
+    left: 50%;
+    /* ใช้ margin เพื่อดันให้อยู่กึ่งกลาง โดยไม่ไปตีกับ Animation */
+    margin-top: -200px; /* ครึ่งนึงของความสูง 400px */
+    margin-left: -150px; /* ครึ่งนึงของความกว้าง 300px */
+}
+
+/* =========================================
+   1. ล็อคหน้าจอให้ตายตัว (ป้องกันการปัดเด้งหรือซูมบนมือถือ)
+   ========================================= */
+html, body {
+    overflow: hidden;
+    width: 100vw;
+    height: 100dvh; /* ใช้ dvh (Dynamic Viewport Height) เพื่อแก้ปัญหาแถบ URL ด้านล่างของ Safari ใน iPhone */
+    touch-action: none; /* ปิดการปัดหน้าจอแล้วเกิดการเด้ง (Elastic scroll) */
+}
+
+/* =========================================
+   2. แก้ไขการจัดกึ่งกลางของเดิม (บังคับให้อยู่ตรงกลางเป๊ะๆ)
+   ========================================= */
+#card-scene {
+    top: 50%;
+    left: 50%;
+    margin-top: -200px; /* ครึ่งนึงของความสูง 400px (สำหรับจอคอม) */
+    margin-left: -150px; /* ครึ่งนึงของความกว้าง 300px (สำหรับจอคอม) */
+}
+
+/* =========================================
+   3. Mobile Responsive (ตั้งค่าสเกลใหม่สำหรับ iPhone 15 Pro Max)
+   ========================================= */
+@media screen and (max-width: 600px) {
+    /* ปรับขนาดตัวอักษรนับถอยหลัง */
+    .pink-text {
+        font-size: 18vw !important; 
+    }
+
+    /* ขยายขนาดสมุดขึ้นมาอีกนิดให้เต็มตากับจอ Pro Max (กางแล้วกว้าง 380px) */
+    #card-scene {
+        width: 190px;
+        height: 280px;
+        /* ขยับกึ่งกลางให้ตรงกับขนาดใหม่ */
+        margin-top: -140px; /* ครึ่งนึงของ 280px */
+        margin-left: -95px; /* ครึ่งนึงของ 190px */
+    }
+
+    /* เพิ่มพื้นที่ขอบกระดาษให้อ่านสบายตา */
+    .page {
+        padding: 12px;
+    }
+
+    /* --- หน้าปก --- */
+    .page-cover img {
+        width: 90%; 
+    }
+    .page-cover h3 {
+        font-size: 1rem; /* ขยายตัวหนังสือหน้าปก */
+        margin-top: 12px;
+    }
+
+    /* --- หน้าคำอวยพร (กระดาษวินเทจ) ให้อ่านชัดขึ้น --- */
+    .message-box.vintage-paper {
+        padding: 12px;
+        font-size: 0.75rem; /* ขยายตัวอักษรหลัก */
+        line-height: 1.5;
+    }
+    .message-box span {
+        font-size: 0.65rem; /* ขยายตัวอักษรเนื้อหา */
+        margin-top: 8px;
+    }
+    .vintage-quote {
+        font-size: 0.8rem;
+        margin-top: 10px;
+    }
+
+    /* --- หน้าขวา (รูปคู่) --- */
+    .right-content {
+        gap: 10px;
+    }
+    .right-content img {
+        width: 90%;
+        height: 90px; /* ขยายรูปให้ชัดขึ้น */
+        border-radius: 6px;
+    }
+    .right-content p {
+        font-size: 0.85rem;
+        margin-top: 0;
+    }
+}

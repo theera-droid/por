@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Project</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div id="stars-container"></div>
+
+    <div id="intro-scene">
+        <div class="pink-text" style="animation-delay: 2.5s; font-size: 8rem;">3</div>
+        <div class="pink-text" style="animation-delay: 4.0s; font-size: 7rem;">2</div>
+        <div class="pink-text" style="animation-delay: 6.0s; font-size: 6rem;">1</div>
+        <div class="pink-text" style="animation-delay: 8.0s; font-size: 6rem;">HAPPY</div>
+        <div class="pink-text" style="animation-delay: 10.0s; font-size: 5rem;">BIRTHDAY</div>
+        <div class="pink-text" style="animation-delay: 12.0s; font-size: 7rem;">TO</div>
+        <div class="pink-text" style="animation-delay: 14.0s; font-size: 8rem;">SUMESA</div>
+    </div>
+
+<div id="card-scene">
+    <div class="book" id="book-container">
+        
+        <div class="page page-right" onclick="flipPage()">
+            <div class="right-content">
+                <img src="m1.jpg" alt="Photo 1">
+                <img src="m2.png" alt="Photo 2">
+                <p>Love You Always 💗</p>
+            </div>
+        </div>
+
+        <div class="page page-left" id="page-left" onclick="flipPage()">
+            <div class="back-content">
+                <div class="message-box vintage-paper">
+                    To SUMESA คนสวยของพี่ 💕<br>
+                    <span>
+                        ปีนี้ 20 แล้วนะ โตขึ้นอีกปีแล้วว<br>
+                        พี่ไม่โดนจับละ55555 ติดเล่นนิดหน่อย แต่ติดหนูบ่อยม้ากกก จริงจังละๆ🤣😊<br>
+                        พี่อวยพรให้หนูเจอแต่สิ่งดีๆ ขอให้มีความสุขมากขึ้นๆๆๆเยยย ยิ้มเยอะๆนะ<br>
+                        ไม่ว่าหนูจะทำอะไร พี่จะคอยซัพพอร์ตเสมอ เป็นเด็กดื้อของพี่แบบนี้ทุกปีนะ<br>
+                        สุขสันต์วันเกิดนะคะ พี่รักหนูนะ💗💗🫶🏻🫶🏻
+                    </span>
+                    <p class="vintage-quote">"From the very beginning... and forever."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page page-cover" id="cover" onclick="flipPage()">
+            <img src="https://media1.tenor.com/m/-mA9jd18tqoAAAAC/husband-wife.gif" alt="Cover">
+            <h3>แตะเพื่อเปิดคั้บบ💕</h3>
+        </div>
+
+    </div>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>
