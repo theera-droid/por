@@ -272,86 +272,70 @@ canvas {
 }
 
 /* =========================================
-   1. ล็อคหน้าจอให้ตายตัว (แก้ปัญหาจอมือถือเลื่อนหรือเด้ง)
+   🔥 1. แก้บั๊ก iPhone (Safari) ที่ทำให้หน้าซ้ายหาย
+   ========================================= */
+.book, .page, .back-content {
+    /* บังคับให้เบราว์เซอร์มือถืออ่านค่า 3D ให้สมบูรณ์ */
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.page {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* จุดสำคัญ: บังคับให้ Safari แสดงผลหน้าซ้ายเมื่อพลิกกลับด้าน */
+.page-left.flipped {
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+}
+
+/* =========================================
+   📱 2. จัดขนาดให้พอดีหน้าจอมือถือทุกรุ่น (ไม่ล้นขอบชัวร์ๆ)
    ========================================= */
 html, body {
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    height: 100dvh; /* รองรับเบราว์เซอร์มือถือรุ่นใหม่ๆ ให้พอดีจอ */
-    touch-action: none; 
+    height: 100dvh; /* จัดการแถบ URL ด้านล่างของ iPhone */
+    touch-action: none; /* ล็อคหน้าจอไม่ให้เด้งเวลาปัด */
 }
 
-/* =========================================
-   2. จัดกึ่งกลางสมุด (ไม่ให้ตีกับ Animation)
-   ========================================= */
-#card-scene {
-    top: 50%;
-    left: 50%;
-    /* สำหรับจอคอม (ขนาดเดิม 300x400 ดันกลับครึ่งนึงให้อยู่ตรงกลาง) */
-    margin-top: -200px; 
-    margin-left: -150px; 
-}
-
-/* =========================================
-   3. Mobile Responsive (ปรับสเกลให้พอดีมือถือ "ทุกรุ่น")
-   ========================================= */
 @media screen and (max-width: 600px) {
-    /* ปรับขนาดตัวเลขนับถอยหลัง */
+    /* ขนาดอักษรนับถอยหลัง */
     .pink-text {
         font-size: 15vw !important; 
     }
 
-    /* 🔥 จุดสำคัญ: ลดขนาดสมุดตอนพับให้เหลือ 160x240
-       (พอกางออก 2 หน้า จะกว้าง 320px พอดีกับจอมือถือเป๊ะ ไม่ตกขอบชัวร์!) */
+    /* ลดขนาดสมุดให้กางออกแล้วกว้าง 320px (พอดีกับ iPhone ทุกรุ่น) */
     #card-scene {
         width: 160px;
         height: 240px;
-        /* จัดให้อยู่ตรงกลางตามขนาดใหม่ */
-        margin-top: -120px; /* ครึ่งนึงของความสูง 240px */
-        margin-left: -80px; /* ครึ่งนึงของความกว้าง 160px */
+        /* บังคับกึ่งกลางหน้าจอแบบไม่ให้ทะลุขอบ */
+        top: 50%;
+        left: 50%;
+        margin-top: -120px; 
+        margin-left: -80px; 
     }
 
-    /* ลดพื้นที่ขอบกระดาษด้านในลง */
-    .page {
-        padding: 10px;
-    }
+    .page { padding: 10px; }
 
     /* --- หน้าปก --- */
-    .page-cover img {
-        width: 85%; 
-    }
-    .page-cover h3 {
-        font-size: 0.8rem;
-        margin-top: 10px;
-    }
+    .page-cover img { width: 85%; }
+    .page-cover h3 { font-size: 0.8rem; margin-top: 10px; }
 
     /* --- หน้าซ้าย (คำอวยพร) --- */
     .message-box.vintage-paper {
         padding: 10px;
-        font-size: 0.65rem; /* ปรับขนาดฟอนต์ให้อ่านง่ายในกรอบที่เล็กลง */
+        font-size: 0.65rem;
         line-height: 1.4;
     }
-    .message-box span {
-        font-size: 0.55rem;
-        margin-top: 6px;
-    }
-    .vintage-quote {
-        font-size: 0.7rem;
-        margin-top: 8px;
-    }
+    .message-box span { font-size: 0.55rem; margin-top: 6px; }
+    .vintage-quote { font-size: 0.7rem; margin-top: 8px; }
 
     /* --- หน้าขวา (รูปคู่) --- */
-    .right-content {
-        gap: 8px;
-    }
-    .right-content img {
-        width: 90%;
-        height: 75px; 
-        border-radius: 6px;
-    }
-    .right-content p {
-        font-size: 0.75rem;
-        margin-top: 0;
-    }
+    .right-content { gap: 8px; }
+    .right-content img { width: 90%; height: 75px; border-radius: 6px; }
+    .right-content p { font-size: 0.75rem; margin-top: 0; }
 }
