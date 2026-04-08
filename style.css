@@ -272,60 +272,68 @@ canvas {
 }
 
 /* =========================================
-   🔥 1. แก้บั๊ก iPhone (Safari) ที่ทำให้หน้าซ้ายหาย
-   ========================================= */
-.book, .page, .back-content {
-    /* บังคับให้เบราว์เซอร์มือถืออ่านค่า 3D ให้สมบูรณ์ */
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-}
-
-.page {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-/* จุดสำคัญ: บังคับให้ Safari แสดงผลหน้าซ้ายเมื่อพลิกกลับด้าน */
-.page-left.flipped {
-    -webkit-backface-visibility: visible !important;
-    backface-visibility: visible !important;
-}
-
-/* =========================================
-   📱 2. จัดขนาดให้พอดีหน้าจอมือถือทุกรุ่น (ไม่ล้นขอบชัวร์ๆ)
+   1. ล็อคหน้าจอ (ป้องกันการปัดเด้งบนมือถือ)
    ========================================= */
 html, body {
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    height: 100dvh; /* จัดการแถบ URL ด้านล่างของ iPhone */
-    touch-action: none; /* ล็อคหน้าจอไม่ให้เด้งเวลาปัด */
+    height: 100dvh;
+    touch-action: none; 
 }
 
+/* =========================================
+   🔥 2. ยาแรง แก้บั๊ก iPhone ซ่อนหน้าซ้ายแบบเด็ดขาด 🔥
+   ========================================= */
+.book, .page, .back-content {
+    -webkit-transform-style: preserve-3d !important;
+    transform-style: preserve-3d !important;
+}
+
+.page-left, .back-content {
+    /* บังคับเปิดตา Safari ให้แสดงผลด้านหลังเสมอ ห้ามซ่อน! */
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+}
+
+.page-left.flipped {
+    /* ดันหน้าซ้ายให้ลอยขึ้นมา 2px ป้องกันการจมหายหรือโดนทับ */
+    -webkit-transform: rotateY(-180deg) translateZ(2px) !important;
+    transform: rotateY(-180deg) translateZ(2px) !important;
+    z-index: 15 !important;
+}
+
+.page-cover.flipped {
+    /* สั่งให้ปกหน้าจางหายไปตอนเปิด เพื่อไม่ให้เป็นเงาดำมาบังหน้าซ้าย */
+    opacity: 0 !important;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease 0.3s !important;
+}
+
+/* =========================================
+   📱 3. Mobile Responsive (จัดสเกลกึ่งกลาง พอดีจอ)
+   ========================================= */
 @media screen and (max-width: 600px) {
-    /* ขนาดอักษรนับถอยหลัง */
-    .pink-text {
+    .pink-text { 
         font-size: 15vw !important; 
     }
 
-    /* ลดขนาดสมุดให้กางออกแล้วกว้าง 320px (พอดีกับ iPhone ทุกรุ่น) */
+    /* ขนาดสมุด (กางออกแล้วจะได้กว้าง 340px พอดีกับจอมือถือเป๊ะๆ) */
     #card-scene {
-        width: 160px;
-        height: 240px;
-        /* บังคับกึ่งกลางหน้าจอแบบไม่ให้ทะลุขอบ */
+        width: 170px;
+        height: 250px;
+        /* บังคับล็อคกึ่งกลางหน้าจอแบบตายตัว */
         top: 50%;
         left: 50%;
-        margin-top: -120px; 
-        margin-left: -80px; 
+        margin-top: -125px; 
+        margin-left: -85px; 
+        transform: none; 
     }
 
-    .page { padding: 10px; }
-
-    /* --- หน้าปก --- */
+    .page { padding: 12px; }
     .page-cover img { width: 85%; }
     .page-cover h3 { font-size: 0.8rem; margin-top: 10px; }
 
-    /* --- หน้าซ้าย (คำอวยพร) --- */
+    /* ปรับตัวหนังสือฝั่งซ้ายให้อ่านง่าย */
     .message-box.vintage-paper {
         padding: 10px;
         font-size: 0.65rem;
@@ -334,8 +342,8 @@ html, body {
     .message-box span { font-size: 0.55rem; margin-top: 6px; }
     .vintage-quote { font-size: 0.7rem; margin-top: 8px; }
 
-    /* --- หน้าขวา (รูปคู่) --- */
+    /* ปรับรูปคู่ฝั่งขวา */
     .right-content { gap: 8px; }
-    .right-content img { width: 90%; height: 75px; border-radius: 6px; }
+    .right-content img { width: 90%; height: 80px; border-radius: 6px; }
     .right-content p { font-size: 0.75rem; margin-top: 0; }
 }
